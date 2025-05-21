@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>자전거 보관소 지도</title>
+    <script type="text/javascript" src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=지도apikey"></script>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+        }
+        #map {
+            width: 100%;
+            height: 100vh; /* 뷰포트 높이만큼 꽉 채움 */
+        }
+    </style>
+
+</head>
+<body>
+
+<h2>자전거 보관소 위치</h2>
+<div id="map"></div>
+
+<script>
+    const map = new naver.maps.Map('map', {
+        center: new naver.maps.LatLng(37.746550, 126.487795),
+        zoom: 12
+    });
+
+    fetch("/api/stations")
+        .then(res => res.json())
+        .then(data => {
+            data.forEach(loc => {
+                new naver.maps.Marker({
+                    map: map,
+                    position: new naver.maps.LatLng(loc.lat, loc.lng),
+                    title: loc.name
+                });
+            });
+        })
+    .catch(error => {
+        console.error("API 호출 에러:", error);
+    });
+</script>
+
+</body>
+</html>
